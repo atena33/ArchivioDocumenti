@@ -1,3 +1,4 @@
+# ArchivioDocumenti
 # Sistema di Gestione e Archivio Documenti Digitale
 
 Questo progetto consiste in un'applicazione web per la gestione dei documenti aziendali, 
@@ -10,7 +11,7 @@ dei documenti associati a categorie e clienti.
 ## 1. Configurazione del Database SQL Server
 
 Il sistema si appoggia a un database relazionale composto da tre tabelle principali con vincoli 
-di integrit‡ referenziale (`Categorie`, `Clienti`, `Documenti`) e diverse stored procedure 
+di integrit√† referenziale (`Categorie`, `Clienti`, `Documenti`) e diverse stored procedure 
 dedicate alla gestione delle operazioni e alla ricerca testuale avanzata.
 
 Per configurare l'ambiente database prima di avviare l'applicazione:
@@ -49,9 +50,9 @@ del proprio server locale:
 ## 3. Breve nota sulle scelte tecniche
 
 L'architettura del software segue i moderni standard di sviluppo enterprise, 
-orientati alla manutenibilit‡ e alle prestazioni:
+orientati alla manutenibilit√† e alle prestazioni:
 
-1. Separazione delle responsabilit‡ (Layered Architecture). Il backend Ë strutturato in livelli 
+1. Separazione delle responsabilit√† (Layered Architecture). Il backend √® strutturato in livelli 
    distinti. Questa separazione garantisce che la logica di business sia totalmente indipendente 
    dalle tecnologie di persistenza o dalle interfacce utente.
 2. Stored Procedure per la logica dei dati.
