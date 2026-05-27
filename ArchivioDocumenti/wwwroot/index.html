@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Documenti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 text-primary">📂 Area Gestione Documenti</h1>
+            <button class="btn btn-success" onclick="mostraFormNuovo()">+ Nuovo Documento</button>
+        </div>
+
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-secondary text-white">Filtri di Ricerca</div>
+            <div class="card-body">
+                <form id="formFiltri" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Nome Categoria</label>
+                        <input type="text" id="filtroCategoria" class="form-control" placeholder="Es. Documento di riconoscimento">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Ragione Sociale Cliente</label>
+                        <input type="text" id="filtroCliente" class="form-control" placeholder="Bar S.r.l.">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Stato</label>
+                        <select id="filtroStato" class="form-select">
+                            <option value="">Tutti</option>
+                            <option value="bozza">Bozza</option>
+                            <option value="pubblicato">Pubblicato</option>
+                            <option value="archiviato">Archiviato</option>
+                            <option value="annullato">Annullato</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="button" class="btn btn-primary w-100" onclick="cercaDocumenti()">Applica Filtri</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Titolo</th>
+                            <th>Categoria</th>
+                            <th>Cliente</th>
+                            <th>Stato</th>
+                            <th>Allegato</th>
+                            <th class="text-end">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabellaDocumenti">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAllegato" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Carica Allegato Reale</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="alertModal" class="alert alert-danger d-none"></div>
+                    <input type="hidden" id="allegatoDocId">
+                    <div class="mb-3">
+                        <label class="form-label">Seleziona il file (Max 5MB - PDF, DOCX, JPG, PNG)</label>
+                        <input class="form-control" type="file" id="inputFileElement">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-primary" onclick="inviaAllegatoReale()">Salva File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalNuovoDocumento" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">➕ Crea Nuovo Documento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="alertNuovoDoc" class="alert alert-danger d-none"></div>
+                    <form id="formNuovoDocumento">
+
+                        <div class="mb-3">
+                            <label class="form-label">Titolo Documento *</label>
+                            <input type="text" id="nuovoTitolo" class="form-control" placeholder="Es. Contratto di Fornitura 2026" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Categoria *</label>
+                            <select id="nuovaCategoria" class="form-select" onchange="gestisciNuovaCategoria(this)" required>
+                                <option value="">-- Seleziona una Categoria --</option>
+                                <option value="__NEW__" class="text-success fw-bold">✨ + Aggiungi Nuova Categoria...</option>
+                                <option disabled>────────────────────</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cliente (Ragione Sociale) *</label>
+                            <select id="nuovoCliente" class="form-select" onchange="gestisciNuovoCliente(this)" required>
+                                <option value="">-- Seleziona un Cliente --</option>
+                                <option value="__NEW__" class="text-success fw-bold">✨ + Aggiungi Nuovo Cliente...</option>
+                                <option disabled>────────────────────</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Stato Iniziale *</label>
+                            <select id="nuovoStato" class="form-select" required>
+                                <option value="bozza">Bozza</option>
+                                <option value="pubblicato">Pubblicato</option>
+                                <option value="archiviato">Archiviato</option>
+                                <option value="annullato">Annullato</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Inserisci subito un allegato *</label>
+                            <input class="form-control" type="file" id="nuovoFileInput">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annulla</button>
+                    <button type="button" class="btn btn-success" onclick="creaNuovoDocumento()">Crea Documento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
